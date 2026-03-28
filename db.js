@@ -5,8 +5,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const connectionString = process.env.DATABASE_URL || `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || 'justatee'}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 5432}/${process.env.DB_DATABASE || 'university_db'}`;
 
-// Bật SSL nếu là Render hoặc production
-const useSSL = isProduction || (connectionString && (connectionString.includes('render.com') || connectionString.includes('onrender.com')));
+// Tự động bật SSL nếu không phải là localhost (kết nối từ xa tới Render)
+const useSSL = isProduction || (connectionString && !connectionString.includes('localhost') && !connectionString.includes('127.0.0.1'));
 
 const pool = new Pool({
   connectionString: connectionString,
